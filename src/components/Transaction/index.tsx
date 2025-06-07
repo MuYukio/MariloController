@@ -1,20 +1,25 @@
 import React from "react";
-import { Container, Data, Footer, Header,Money,Spend,Text } from "../Transaction/styles";
+import { CategoryContainer, CategoryText, Container, DateText } from "../Transaction/styles";
+import { Amount, Title } from "../HighlightCard/styles";
 
-export function Transaction(){
-    return(
-        <Container>
-            <Header>
-                <Text>Desenvolvimento de site</Text>
-                <Money>R$:600</Money>
-            </Header>
-            
-            <Footer>
-                <Spend>Alimentação</Spend>
-                <Data>12/28/202X</Data>
-            </Footer>
-            
-        </Container>
-        
-    )
+interface Props {
+  title: string;
+  amount: string;
+  category: string;
+  date: string;
+}
+
+
+export function Transaction({ title, amount, category, date }: Props) {
+  return (
+    <Container>
+      <Title>{title}</Title>
+      <Amount>{amount}</Amount>
+      <CategoryContainer>
+        <CategoryText>{category}</CategoryText>
+        <DateText>{date}</DateText>
+      </CategoryContainer>
+    </Container>
+
+  )
 }

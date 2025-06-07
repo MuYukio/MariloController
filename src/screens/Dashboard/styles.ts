@@ -10,7 +10,9 @@ import { Feather } from '@expo/vector-icons'
 
 export const Container = styled.View`
     flex: 1;
-    background-color: ${({ theme }) => theme.colors.background}
+    background-color: ${({ theme }) => theme.colors.background};
+    padding-bottom: RFValue(60=);
+
 `
 export const Title = styled.Text`
     font-family: ${({ theme}) => theme.fonts.bold};
@@ -75,12 +77,34 @@ export const HighlightCards = styled.ScrollView.attrs({
     z-index:9;
 `
 
-export const Transactions = styled.View`
-    flex: 1;
-    z-index: 1;
-    padding-top: ${RFPercentage(16)}px;
-    margin-left: ${RFPercentage(3)}px;
-`
 export const Text = styled.Text`
-
 `
+export const ListContainer = styled.View`
+  flex: 1;
+  background-color: ${({ theme }) => theme.colors.shape};
+  margin: ${RFValue(120)}px ${RFValue(40)}px 0;   /* top, horizontal */
+  border-radius: ${({ theme }) => theme.borderRadius.medium}px;
+  padding: ${RFValue(12)}px;
+  margin-bottom: ${RFValue(60)}px
+`;
+
+// novo: título “Listagem” estilizado
+export const ListTitle = styled.Text`
+  font-size: ${({ theme }) => theme.fontSize.large}px;
+  font-family: ${({ theme }) => theme.fonts.bold};
+  color: ${({ theme }) => theme.colors.text};
+  margin-bottom: ${RFValue(8)}px;
+`;
+
+export const Transactions = styled.ScrollView.attrs({
+  contentContainerStyle: {
+    paddingHorizontal: RFValue(16),
+    paddingBottom: RFValue(16),
+    alignItems: 'center',
+  },
+  showsVerticalScrollIndicator: false,
+})`
+  flex: 1;
+   
+  
+`;
