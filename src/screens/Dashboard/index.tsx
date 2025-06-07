@@ -1,5 +1,6 @@
 import React from "react";
 import { Feather } from "@expo/vector-icons";
+
 import {
   Container,
   Header,
@@ -19,8 +20,16 @@ import {
 import { HighlightCard } from "../../components/HighlightCard";
 import { Transaction } from "../../components/Transaction";
 
+// Tipagem para as transações
+type TransactionType = {
+  title: string;
+  amount: string;
+  category: string;
+  date: string;
+  type: "up" | "down";
+};
+
 export function Dashboard() {
-  // 1) Array de dados dos HighlightCards
   const highlights = [
     {
       type: "up" as const,
@@ -42,38 +51,39 @@ export function Dashboard() {
     },
   ];
 
-  // 2) Array de dados das Transações
-  const data = [
+  const transactions: TransactionType[] = [
     {
       title: "Desenvolvimento de site",
       amount: "R$ 600,00",
-      category: "Alimentação",
-      date: "12/28/202X",
+      category: "Serviço",
+      date: "28/06/2025",
+      type: "up",
     },
     {
       title: "Compra de material",
       amount: "R$ 150,00",
       category: "Educação",
-      date: "13/28/202X",
+      date: "29/06/2025",
+      type: "up",
     },
     {
       title: "Academia",
       amount: "R$ 80,00",
       category: "Saúde",
-      date: "15/28/202X",
+      date: "30/06/2025",
+      type: "down",
     },
-    // ...
   ];
 
   return (
     <Container>
+      {/* Cabeçalho com dados do usuário */}
       <Header>
         <UserWrapper>
           <UserInfo>
             <Photo
               source={{
-                uri:
-                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSU44njtRybQEs-6TGCyT8MKwnnPGo8rphl9g&s",
+                uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSU44njtRybQEs-6TGCyT8MKwnnPGo8rphl9g&s",
               }}
             />
             <User>
@@ -85,10 +95,11 @@ export function Dashboard() {
         </UserWrapper>
       </Header>
 
+      {/* Cartões de resumo */}
       <HighlightCards>
-        {highlights.map((h, i) => (
+        {highlights.map((h, index) => (
           <HighlightCard
-            key={i}
+            key={index}
             type={h.type}
             title={h.title}
             amount={h.amount}
@@ -97,17 +108,18 @@ export function Dashboard() {
         ))}
       </HighlightCards>
 
+      {/* Lista de transações */}
       <ListContainer>
         <ListTitle>Listagem de Transações</ListTitle>
         <Transactions>
-          {data.map((item, index) => (
+          {transactions.map((item, index) => (
             <Transaction
-              key={index}
+              key={`${item.title}-${index}`}
               title={item.title}
               amount={item.amount}
               category={item.category}
               date={item.date}
-            />
+              type={item.type} icon={""}            />
           ))}
         </Transactions>
       </ListContainer>

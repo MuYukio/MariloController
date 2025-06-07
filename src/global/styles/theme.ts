@@ -16,6 +16,8 @@ export default {
         text_light: '#7F8C8D',   
 
         shape: '#FFFFFF',
+
+        cor:`#6495ED`,
     },
     fonts: {
         medium: 'Poppins_500Medium',

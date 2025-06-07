@@ -1,25 +1,38 @@
 import React from "react";
-import { CategoryContainer, CategoryText, Container, DateText } from "../Transaction/styles";
-import { Amount, Title } from "../HighlightCard/styles";
+import {
+  Container,
+  Title,
+  Amount,
+  Footer,
+  Icon,
+  CategoryText,
+  DateText
+} from "../Transaction/styles";
 
 interface Props {
   title: string;
   amount: string;
   category: string;
   date: string;
+  type: 'up' | 'down';
+  icon: string;
 }
 
-
-export function Transaction({ title, amount, category, date }: Props) {
+export function Transaction({ title, amount, category, date, type, icon }: Props) {
   return (
     <Container>
       <Title>{title}</Title>
-      <Amount>{amount}</Amount>
-      <CategoryContainer>
+
+      <Amount type={type}>
+        {type === 'down' && '- '}
+        {amount}
+      </Amount>
+
+      <Footer>
+        <Icon name={icon} />
         <CategoryText>{category}</CategoryText>
         <DateText>{date}</DateText>
-      </CategoryContainer>
+      </Footer>
     </Container>
-
-  )
+  );
 }
