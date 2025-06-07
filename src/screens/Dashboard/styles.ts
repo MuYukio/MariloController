@@ -11,7 +11,7 @@ import { Feather } from '@expo/vector-icons'
 export const Container = styled.View`
     flex: 1;
     background-color: ${({ theme }) => theme.colors.background};
-    padding-bottom: RFValue(60=);
+    padding-bottom: RFValue(60);
 
 `
 export const Title = styled.Text`
