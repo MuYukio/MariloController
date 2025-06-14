@@ -12,7 +12,7 @@ export default {
         background: '#F4F6F7',   
         error: '#C0392B',        
 
-        text: '#2C3E50',         
+        text_dark: '#2C3E50',         
         text_light: '#7F8C8D',   
 
         shape: '#FFFFFF',
