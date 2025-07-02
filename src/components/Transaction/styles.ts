@@ -1,9 +1,13 @@
-import { RFValue } from "react-native-responsive-fontsize";
+// components/Transaction/styles.ts
 import styled, { css } from "styled-components/native";
-import { Feather } from '@expo/vector-icons';
+import { RFValue } from "react-native-responsive-fontsize";
+import { Feather } from "@expo/vector-icons";
 
 interface AmountProps {
-  type: 'up' | 'down';
+  type: "up" | "down";
+}
+interface IconProps {
+  type: "up" | "down";
 }
 
 export const Container = styled.View`
@@ -14,6 +18,7 @@ export const Container = styled.View`
   margin-bottom: ${RFValue(8)}px;
   border-width: ${RFValue(1)}px;
   border-color: ${({ theme }) => theme.colors.text_light};
+ 
 `;
 
 export const Title = styled.Text`
@@ -27,28 +32,35 @@ export const Amount = styled.Text<AmountProps>`
   font-family: ${({ theme }) => theme.fonts.medium};
   margin-top: 2px;
 
-  ${({ type, theme }) => type === 'up' && css`
-    color: ${theme.colors.success};
-  `}
+  ${({ type, theme }) =>
+    type === "up" &&
+    css`
+      color: ${theme.colors.success};
+    `}
 
-  ${({ type, theme }) => type === 'down' && css`
-    color: ${theme.colors.error};
-  `}
+  ${({ type, theme }) =>
+    type === "down" &&
+    css`
+      color: ${theme.colors.error};
+    `}
 `;
 
 export const Footer = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  background-color: ${({ theme }) => theme.colors.cor};
+  background-color: ${({ theme }) => theme.colors.background};
   padding: ${RFValue(4)}px ${RFValue(8)}px;
   margin-top: ${RFValue(8)}px;
   border-radius: ${({ theme }) => theme.borderRadius.small}px;
 `;
 
-export const Icon = styled(Feather)`
+export const Icon = styled(Feather) <IconProps>`
   font-size: ${({ theme }) => theme.fontSize.medium}px;
-  color: ${({ theme }) => theme.colors.text};
+
+  
+  color: ${({ type, theme }) =>
+    type === "up" ? theme.colors.success : theme.colors.error};
 `;
 
 export const CategoryText = styled.Text`
@@ -60,5 +72,5 @@ export const CategoryText = styled.Text`
 export const DateText = styled.Text`
   font-size: ${({ theme }) => theme.fontSize.small}px;
   font-family: ${({ theme }) => theme.fonts.regular};
-  color: ${({ theme }) => theme.colors.text_light};
+  color: ${({ theme }) => theme.colors.text_dark};
 `;

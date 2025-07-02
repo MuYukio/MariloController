@@ -2,32 +2,33 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { Dashboard } from "../screens/Dashboard";
 import { Register } from "../screens/Register"
-//import { Resume } from "../screens/Resume";
+
 import { Feather } from "@expo/vector-icons";
-import{ useTheme } from "styled-components/native"
+import { useTheme } from "styled-components/native"
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
-import { MaterialIcons }  from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
+import { Resumo } from "../screens/Resume";
 
-export function AppRoutes(){
+export function AppRoutes() {
 
     const theme = useTheme();
-    return(
+    return (
         <Navigator id={undefined}
             screenOptions={{
-                headerShown:false,
+                headerShown: false,
                 tabBarActiveTintColor: theme.colors.primary,
                 tabBarInactiveTintColor: theme.colors.text_light,
                 tabBarLabelPosition: 'beside-icon'
-            
+
             }}
         >
-            <Screen 
-                name = "listagem"
-                component = {Dashboard}
+            <Screen
+                name="listagem"
+                component={Dashboard}
                 options={{
-                    tabBarIcon:(({ size, color }) => (
+                    tabBarIcon: (({ size, color }) => (
                         <MaterialIcons
                             name="format-list-bulleted"
                             size={size}
@@ -38,10 +39,10 @@ export function AppRoutes(){
             />
 
             <Screen
-                name = "Cadastrar"
-                component = {Register}
+                name="Cadastrar"
+                component={Register}
                 options={{
-                    tabBarIcon:(({ size, color }) => (
+                    tabBarIcon: (({ size, color }) => (
                         <Feather
                             name="dollar-sign"
                             size={size}
@@ -51,7 +52,16 @@ export function AppRoutes(){
                 }}
 
             />
-           
+            <Screen
+                name="Resumo"
+                component={Resumo}
+                options={{
+                    tabBarIcon: ({ size, color }) => (
+                        <Feather name="pie-chart" size={size} color={color} />
+                    ),
+                }}
+            />
+
         </Navigator>
     )
 }

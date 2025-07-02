@@ -7,7 +7,7 @@ import {
   Icon,
   CategoryText,
   DateText
-} from "../Transaction/styles";
+} from "./styles";
 
 interface Props {
   title: string;
@@ -29,7 +29,7 @@ export function Transaction({ title, amount, category, date, type, icon }: Props
       </Amount>
 
       <Footer>
-        <Icon name={icon} />
+        <Icon name={icon}  type={type} r/>
         <CategoryText>{category}</CategoryText>
         <DateText>{date}</DateText>
       </Footer>
