@@ -1,6 +1,7 @@
-import React from "react";
+// src/screens/Dashboard.tsx
+import React, { useState, useCallback } from "react";
 import { Feather } from "@expo/vector-icons";
-
+import { useFocusEffect } from "@react-navigation/native";
 import {
   Container,
   Header,
@@ -15,69 +16,100 @@ import {
   ListContainer,
   ListTitle,
   Transactions,
+  LogoutButton,
 } from "./styles";
 
 import { HighlightCard } from "../../components/HighlightCard";
 import { Transaction } from "../../components/Transaction";
 
-// Tipagem para as transações
-type TransactionType = {
+// Tipagens
+export type HighlightData = {
+  type: "up" | "down" | "total";
   title: string;
   amount: string;
-  category: string;
-  date: string;
-  type: "up" | "down";
+  lastTransaction: string;
+};
+
+export type TransactionType = {
+  id: string;
+  titulo: string;
+  preco: number;
+  categoria: string;
+  data: string;
+  tipo: "entrada" | "saida";
 };
 
 export function Dashboard() {
-  const highlights = [
-    {
-      type: "up" as const,
-      title: "Entradas",
-      amount: "R$ 28.000,00",
-      lastTransaction: "Última entrada em 16 de junho",
-    },
-    {
-      type: "down" as const,
-      title: "Saídas",
-      amount: "R$ 15.000,00",
-      lastTransaction: "Última saída em 30 de junho",
-    },
-    {
-      type: "total" as const,
-      title: "Total",
-      amount: "R$ 13.000,00",
-      lastTransaction: "de 16 a 30 de junho",
-    },
-  ];
+  const [highlights, setHighlights] = useState<HighlightData[]>([]);
+  const [transactions, setTransactions] = useState<TransactionType[]>([]);
 
-  const transactions: TransactionType[] = [
-    {
-      title: "Desenvolvimento de site",
-      amount: "R$ 600,00",
-      category: "Serviço",
-      date: "28/06/2025",
-      type: "up",
-    },
-    {
-      title: "Compra de material",
-      amount: "R$ 150,00",
-      category: "Educação",
-      date: "29/06/2025",
-      type: "up",
-    },
-    {
-      title: "Academia",
-      amount: "R$ 80,00",
-      category: "Saúde",
-      date: "30/06/2025",
-      type: "down",
-    },
-  ];
+  const API_BASE = "http://10.0.0.131:3000/api/v1/transacoes";
+
+  const formatCurrency = (value: number | string | undefined) => {
+    const num = Number(value ?? 0);
+    return `R$ ${num.toFixed(2).replace(".", ",")}`;
+  };
+
+  const formatDate = (iso: string) => {
+    const d = new Date(iso);
+    const day = String(d.getDate()).padStart(2, "0");
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const year = d.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      async function loadData() {
+        try {
+          const resTx = await fetch(API_BASE);
+          const data: TransactionType[] = await resTx.json();
+          setTransactions(data);
+
+          const resSum = await fetch(`${API_BASE}/resumo`);
+          const { entradas, saidas, total } = await resSum.json();
+
+          const ultimaEntrada = data.filter(t => t.tipo === "entrada").slice(-1)[0]?.data;
+          const ultimaSaida = data.filter(t => t.tipo === "saida").slice(-1)[0]?.data;
+
+          setHighlights([
+            {
+              type: "up",
+              title: "Entradas",
+              amount: formatCurrency(entradas),
+              lastTransaction: ultimaEntrada
+                ? `Última entrada em ${formatDate(ultimaEntrada)}`
+                : "Nenhuma entrada registrada",
+            },
+            {
+              type: "down",
+              title: "Saídas",
+              amount: formatCurrency(saidas),
+              lastTransaction: ultimaSaida
+                ? `Última saída em ${formatDate(ultimaSaida)}`
+                : "Nenhuma saída registrada",
+            },
+            {
+              type: "total",
+              title: "Total",
+              amount: formatCurrency(total),
+              lastTransaction: `De ${formatDate(
+                new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1).toISOString()
+              )} a ${formatDate(
+                new Date(new Date().getFullYear(), new Date().getMonth(), 0).toISOString()
+              )}`,
+            },
+          ]);
+        } catch (err) {
+          console.error("Erro ao carregar dashboard:", err);
+        }
+      }
+      loadData();
+    }, [])
+  );
 
   return (
     <Container>
-      {/* Cabeçalho com dados do usuário */}
       <Header>
         <UserWrapper>
           <UserInfo>
@@ -91,15 +123,16 @@ export function Dashboard() {
               <UserName>Aluno</UserName>
             </User>
           </UserInfo>
-          <Icon name="power" />
+          <LogoutButton onPress={() => console.log('Deslogar')}>
+            <Feather name="power" size={24} color="#fff" />
+          </LogoutButton>
         </UserWrapper>
       </Header>
 
-      {/* Cartões de resumo */}
       <HighlightCards>
-        {highlights.map((h, index) => (
+        {highlights.map((h, i) => (
           <HighlightCard
-            key={index}
+            key={i}
             type={h.type}
             title={h.title}
             amount={h.amount}
@@ -108,20 +141,22 @@ export function Dashboard() {
         ))}
       </HighlightCards>
 
-      {/* Lista de transações */}
       <ListContainer>
         <ListTitle>Listagem de Transações</ListTitle>
-        <Transactions>
-          {transactions.map((item, index) => (
+        <Transactions
+          data={transactions}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) => (
             <Transaction
-              key={`${item.title}-${index}`}
-              title={item.title}
-              amount={item.amount}
-              category={item.category}
-              date={item.date}
-              type={item.type} icon={""}            />
-          ))}
-        </Transactions>
+              title={item.titulo}
+              amount={formatCurrency(item.preco)}
+              category={item.categoria}
+              date={formatDate(item.data)}
+              type={item.tipo === "entrada" ? "up" : "down"}
+              icon={item.tipo === "entrada" ? "arrow-up-circle" : "arrow-down-circle"}
+            />
+          )}
+        />
       </ListContainer>
     </Container>
   );
